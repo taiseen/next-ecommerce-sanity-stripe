@@ -604,8 +604,9 @@ span.text-red {
 }
 
 .quantity-desc {
-  border : 1px solid gray;
-  padding: 6px;
+  border     : 1px solid gray;
+  padding    : 6px;
+  user-select: none;
 }
 
 .quantity-desc span {
@@ -622,6 +623,7 @@ span.text-red {
 .quantity-desc .num {
   border-right: 1px solid gray;
   font-size   : 20px;
+
 }
 
 .quantity-desc .plus {

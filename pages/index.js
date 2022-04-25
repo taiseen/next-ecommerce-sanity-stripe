@@ -4,24 +4,28 @@ import { FooterBanner, HeroBanner, Product } from '../components'
 
 const Home = ({ products, banner }) => {
 
-  console.log(products, banner);
+
   return (
     <>
-    <Head>
-      <title>E-shop!</title>
-    </Head>
+      <Head>
+        <title>E-shop!</title>
+      </Head>
 
       <HeroBanner heroBanner={banner.length && banner[0]} />
+      
       <div>
         <h2>Best Selling Products</h2>
       </div>
 
       <div className="products-container">
         {
-          products?.map(product => <Product key={product._id} product={product} />)
+          products?.map(product =>
+            <Product key={product._id} product={product} />
+          )
         }
       </div>
-      <FooterBanner footerBanner={banner && banner[0]}/>
+
+      <FooterBanner footerBanner={banner && banner[0]} />
     </>
   )
 }
