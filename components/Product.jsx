@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { urlFor } from '../lib/client'
+import Link from 'next/link'
+
 
 const Product = ({ product }) => {
 
@@ -9,7 +10,7 @@ const Product = ({ product }) => {
     <div>
 
       <Link href={`/product/${slug.current}`} passHref>
-
+        
         <div className="product-card">
           <img
             width={250}

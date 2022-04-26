@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { urlFor } from '../lib/client'
+import Link from 'next/link';
 
 
 const FooterBanner = ({ footerBanner }) => {

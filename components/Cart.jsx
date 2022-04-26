@@ -3,7 +3,7 @@ import { useStateContext } from '../context/StateContext';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { urlFor } from '../lib/client';
 import { useRef } from 'react';
-// import getStripe from '../lib/getStripe';
+import getStripe from '../lib/getStripe';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -14,26 +14,33 @@ const Cart = () => {
   const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove } = useStateContext();
 
 
-  // const handleCheckout = async () => {
+  // for stripe payment system...
+  const handleCheckout = async () => {
+    console.log('click...');
 
-  //   const stripe = await getStripe();
+    const stripe = await getStripe();
 
-  //   const response = await fetch('/api/stripe', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(cartItems),
-  //   });
+    const response = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartItems),
+    });
 
-  //   if (response.statusCode === 500) return;
+    if (response.statusCode === 500) return;
 
-  //   const data = await response.json();
+    const data = await response.json();
 
-  //   toast.loading('Redirecting...');
+    // show a notification for user...
+    toast.loading('Redirecting...', {
+      style: {
+        background: '#CFD8DC'
+      },
+    });
 
-  //   stripe.redirectToCheckout({ sessionId: data.id });
-  // }
+    stripe.redirectToCheckout({ sessionId: data.id });
+  }
 
 
 
@@ -78,15 +85,15 @@ const Cart = () => {
         <div className="product-container">
           {
             cartItems.length >= 1 && cartItems.map((item) => (
-              <div className="product" key={item._id}>
+              <div className="product" key={item?._id}>
 
-                <img src={urlFor(item?.image[0])} className="cart-product-image" alt={item.name} />
+                <img src={urlFor(item?.image[0])} className="cart-product-image" alt={item?.name} />
 
                 <div className="item-desc">
 
                   <div className="flex top">
-                    <h5>{item.name}</h5>
-                    <h4>${item.price}</h4>
+                    <h5>{item?.name}</h5>
+                    <h4>${item?.price}</h4>
                   </div>
 
                   <div className="flex bottom">
@@ -98,18 +105,18 @@ const Cart = () => {
                         <span className="minus" onClick={(e) => {
                           // for preventing parent onClick event...
                           e.stopPropagation();
-                          toggleCartItemQuantity(item._id, 'dec');
+                          toggleCartItemQuantity(item?._id, 'dec');
                         }}>
                           <AiOutlineMinus />
                         </span>
 
-                        <span className="num" onClick="">{item.quantity}</span>
+                        <span className="num">{item?.quantity}</span>
 
                         {/* for incrementing product quantity */}
                         <span className="plus" onClick={(e) => {
                           // for preventing parent onClick event...
                           e.stopPropagation();
-                          toggleCartItemQuantity(item._id, 'inc');
+                          toggleCartItemQuantity(item?._id, 'inc');
                         }}>
                           <AiOutlinePlus />
                         </span>
@@ -145,9 +152,8 @@ const Cart = () => {
                 <h3>${totalPrice}</h3>
               </div>
 
-              {/* onClick={handleCheckout} */}
               <div className="btn-container">
-                <button type="button" className="btn" >
+                <button type="button" className="btn" onClick={handleCheckout}>
                   Pay with Stripe
                 </button>
               </div>

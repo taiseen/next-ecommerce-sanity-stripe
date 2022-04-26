@@ -392,9 +392,10 @@ span.text-red {
 }
 
 .product {
-  display: flex;
-  gap    : 30px;
-  padding: 20px;
+  display        : flex;
+  justify-content: space-evenly;
+  gap            : 30px;
+  padding        : 20px;
 }
 
 .product .cart-product-image {
@@ -443,12 +444,12 @@ span.text-red {
 }
 
 .cart-bottom {
-  position: absolute;
-  bottom  : 12px;
-  right   : 5px;
-  width   : 100%;
-  padding : 30px 65px;
-
+  position        : absolute;
+  bottom          : 0;
+  right           : 0;
+  width           : 100%;
+  padding         : 30px 65px;
+  background-color: #ddd;
 }
 
 .btn-container {
@@ -605,7 +606,7 @@ span.text-red {
 
 .quantity-desc {
   border     : 1px solid gray;
-  padding    : 6px;
+  padding    : 5px;
   user-select: none;
 }
 
@@ -616,14 +617,13 @@ span.text-red {
 }
 
 .quantity-desc .minus {
-  border-right: 1px solid gray;
-  color       : #f02d34;
+  color: #f02d34;
 }
 
 .quantity-desc .num {
   border-right: 1px solid gray;
+  border-left : 1px solid gray;
   font-size   : 20px;
-
 }
 
 .quantity-desc .plus {
@@ -631,11 +631,11 @@ span.text-red {
 
 }
 
-.maylike-products-wrapper {
+.mayLike-products-wrapper {
   margin-top: 120px;
 }
 
-.maylike-products-wrapper h2 {
+.mayLike-products-wrapper h2 {
   text-align: center;
   margin    : 50px;
   color     : #324d67;
@@ -643,7 +643,7 @@ span.text-red {
   font-size: 28px;
 }
 
-.maylike-products-container {
+.mayLike-products-container {
   display        : flex;
   justify-content: center;
   gap            : 15px;

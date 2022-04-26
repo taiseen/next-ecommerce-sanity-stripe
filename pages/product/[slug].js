@@ -1,19 +1,25 @@
-
-import Head from 'next/head';
-import { useState } from 'react'
-import { Product } from './../../components';
-import { client, urlFor } from '../../lib/client'
 import { AiOutlineMinus, AiOutlinePlus, AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useStateContext } from '../../context/StateContext';
+import { client, urlFor } from '../../lib/client'
+import { Product } from './../../components';
+import { useState } from 'react'
+import Head from 'next/head';
+
 
 
 const ProductInfo = ({ singleProduct, allProducts }) => {
 
     const [index, setIndex] = useState(0);
-    const { decQty, incQty, qty, onAdd } = useStateContext();
     const { name, image, price, details } = singleProduct;
+    const { qty, decQty, incQty, onAdd, setShowCart } = useStateContext();
 
 
+    const handleBuyNow = () => {
+        onAdd(singleProduct, qty);
+        setShowCart(true);
+    }
+
+    
     return (
         <div>
             <Head>
@@ -87,13 +93,13 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
                     <div className='buttons'>
                         <button type='button'
                             className='add-to-cart'
-                            onClick={() => onAdd( singleProduct , qty)}
+                            onClick={() => onAdd(singleProduct, qty)}
                         >
                             Add to cart
                         </button>
                         <button type='button'
                             className='buy-now'
-                            onClick=''
+                            onClick={handleBuyNow}
                         >
                             Buy Now
                         </button>
@@ -102,11 +108,11 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
             </div>
 
 
-            <div className='maylike-products-wrapper'>
+            <div className='mayLike-products-wrapper'>
                 <h2>You may also like</h2>
                 <div className='marquee'>
 
-                    <div className='maylike-products-container track'>
+                    <div className='mayLike-products-container track'>
                         {
                             allProducts.map(item => (
                                 <Product key={item._id} product={item} />
