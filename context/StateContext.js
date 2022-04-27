@@ -14,7 +14,6 @@ export const StateContext = ({ children }) => {
   const [qty, setQty] = useState(1);
 
   let foundProduct;
-  // let index;
 
 
   // for add product into cart
@@ -23,19 +22,16 @@ export const StateContext = ({ children }) => {
     // find that product is already exist in the cart or not?
     const checkProductInCart = cartItems.find(p => p._id === product._id);
 
-    setTotalPrice(prevTotalPrice => prevTotalPrice + product.price * quantity);
-    setTotalQuantities(prevTotalQuantities => prevTotalQuantities + quantity);
 
     // if product already exist/present in cart
     if (checkProductInCart) {
-      const updatedCartItems = cartItems.map(cartProduct => {
-        if (cartProduct._id === product._id) return {
-          ...cartProduct,
-          quantity: cartProduct.quantity + quantity
-        }
-      })
-      // update state variable
-      setCartItems(updatedCartItems);
+      // show a notification for user...
+      toast.success(`This product already added into cart.`, {
+        duration: 3000,
+        style: {
+          background: '#FFECB3'
+        },
+      });
     }
     // if product NOT exist/present in cart
     else {
@@ -44,14 +40,17 @@ export const StateContext = ({ children }) => {
 
       // add into state variable
       setCartItems([...cartItems, { ...product }]);
-    }
 
-    // show a notification for user...
-    toast.success(`${qty} ${product.name} added into cart.`, {
-      style: {
-        background: '#F1F8E9'
-      },
-    });
+      setTotalPrice(prevTotalPrice => prevTotalPrice + product.price * quantity);
+      setTotalQuantities(prevTotalQuantities => prevTotalQuantities + quantity);
+
+      // show a notification for user...
+      toast.success(`${qty} ${product.name} - added into cart.`, {
+        style: {
+          background: '#F1F8E9'
+        },
+      });
+    }
   }
 
 
@@ -65,10 +64,10 @@ export const StateContext = ({ children }) => {
     setCartItems(newCartItems);
 
     // show a notification for user...
-    toast.success(`${product.name} remove from cart.`, {
+    toast.success(`${product.name} - remove from cart.`, {
       position: 'top-right',
       style: {
-        background: '#FFCDD2'
+        background: '#FFCCBC'
       },
     });
   }
@@ -78,20 +77,28 @@ export const StateContext = ({ children }) => {
   const toggleCartItemQuantity = (id, value) => {
 
     foundProduct = cartItems.find(item => item._id === id);
-    // const index = cartItems.findIndex(product => product._id === id);
-    
-    const newCartItems = cartItems.filter(item => item._id !== id);
+    const index = cartItems.findIndex(product => product._id === id);
 
     if (value === 'inc') {
-      setCartItems([...newCartItems, { ...foundProduct, quantity: foundProduct.quantity + 1 }]);
+      setCartItems(
+        cartItems.map((item, i) =>
+          i === index
+            ? { ...foundProduct, quantity: foundProduct.quantity + 1 }
+            : item
+        )
+      );
       setTotalPrice(prevTotalPrice => prevTotalPrice + foundProduct.price)
       setTotalQuantities(prevTotalQuantities => prevTotalQuantities + 1)
-    } else if (value === 'dec') {
-      if (foundProduct.quantity > 1) {
-        setCartItems([...newCartItems, { ...foundProduct, quantity: foundProduct.quantity - 1 }]);
-        setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price)
-        setTotalQuantities(prevTotalQuantities => prevTotalQuantities - 1)
-      }
+    } else if (value === 'dec' && foundProduct.quantity > 1) {
+      setCartItems(
+        cartItems.map((item, i) =>
+          i === index
+            ? { ...foundProduct, quantity: foundProduct.quantity - 1 }
+            : item
+        )
+      );
+      setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price)
+      setTotalQuantities(prevTotalQuantities => prevTotalQuantities - 1)
     }
   }
 
@@ -120,6 +127,7 @@ export const StateContext = ({ children }) => {
         cartItems,
         totalPrice,
         totalQuantities,
+        setQty,
         incQty,
         decQty,
         onAdd,

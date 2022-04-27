@@ -2,7 +2,8 @@ import { AiOutlineMinus, AiOutlinePlus, AiFillStar, AiOutlineStar } from 'react-
 import { useStateContext } from '../../context/StateContext';
 import { client, urlFor } from '../../lib/client'
 import { Product } from './../../components';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
 import Head from 'next/head';
 
 
@@ -11,7 +12,7 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
 
     const [index, setIndex] = useState(0);
     const { name, image, price, details } = singleProduct;
-    const { qty, decQty, incQty, onAdd, setShowCart } = useStateContext();
+    const { qty, decQty, incQty, setQty, onAdd, setShowCart } = useStateContext();
 
 
     const handleBuyNow = () => {
@@ -19,7 +20,15 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
         setShowCart(true);
     }
 
-    
+    // qes: how we track/know - new product come? 
+    // ans: by the help of "singleProduct"
+    // when new product come & re-render this component 
+    // set quantity 1 for that specific product...
+    useEffect(() => {
+        setQty(1);
+    }, [singleProduct])
+
+
     return (
         <div>
             <Head>
@@ -145,6 +154,7 @@ export const getStaticPaths = async () => {
 
     const allProducts = await client.fetch(productsQuery);
 
+    // instantly return an object ({ }) from a function()
     const paths = allProducts.map(product => ({
         params: {
             slug: product.slug.current
