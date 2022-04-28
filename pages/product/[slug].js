@@ -1,32 +1,32 @@
 import { AiOutlineMinus, AiOutlinePlus, AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useStateContext } from '../../context/StateContext';
 import { client, urlFor } from '../../lib/client'
-import { Product } from './../../components';
+import { Product } from '../../components';
 import { useState, useEffect } from 'react'
-
 import Head from 'next/head';
-
 
 
 const ProductInfo = ({ singleProduct, allProducts }) => {
 
     const [index, setIndex] = useState(0);
     const { name, image, price, details } = singleProduct;
-    const { qty, decQty, incQty, setQty, onAdd, setShowCart } = useStateContext();
+    const { qty, decQty, incQty, setQty, setShowCart, addProductIntoCart } = useStateContext();
 
 
     const handleBuyNow = () => {
-        onAdd(singleProduct, qty);
+        addProductIntoCart(singleProduct, qty);
         setShowCart(true);
     }
 
+
     // qes: how we track/know - new product come? 
-    // ans: by the help of "singleProduct"
-    // when new product come & re-render this component 
-    // set quantity 1 for that specific product...
+    // ans: by the help of "singleProduct" props...
+    // when new product come, then re-render this component...
+    // & set quantity 1 for that specific product...
     useEffect(() => {
         setQty(1);
-    }, [singleProduct])
+    }, [singleProduct]);
+
 
 
     return (
@@ -40,6 +40,8 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
                     <div className='image-container'>
                         <img
                             alt={name}
+                            // change image by user hover state
+                            // from image[array] index position number...
                             src={urlFor(image && image[index])}
                             className="product-detail-image" />
                     </div>
@@ -47,12 +49,19 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
 
                     <div className='small-images-container'>
                         {
+                            // display all image's about this product...
+                            // when user hover into these image's... 
+                            // that specific image going to display into big Image Holder...
+                            // loop into image[array]
                             image?.map((item, i) => (
                                 <img
                                     key={i}
                                     alt="images"
                                     src={urlFor(item)}
+                                    // attach event/function with each item...
+                                    // for listening user event...
                                     onMouseEnter={() => setIndex(i)}
+                                    // conditionally CSS styling applying...
                                     className={i === index
                                         ? 'small-image selected-image'
                                         : 'small-image'}
@@ -102,7 +111,9 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
                     <div className='buttons'>
                         <button type='button'
                             className='add-to-cart'
-                            onClick={() => onAdd(singleProduct, qty)}
+                            // for listening user event...
+                            // attach event/function with this button...
+                            onClick={() => addProductIntoCart(singleProduct, qty)}
                         >
                             Add to cart
                         </button>
@@ -170,7 +181,9 @@ export const getStaticPaths = async () => {
 
 
 
-
+// for SSG ==> Static Site Generation
+// by query ==> fetch all those data from Sanity BackEnd... 
+// & pass these data into this Component by the help of props...
 export const getStaticProps = async ({ params: { slug } }) => {
 
     const singleQuery = `*[_type == "product" && slug.current == "${slug}"][0]`;

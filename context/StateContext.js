@@ -7,25 +7,38 @@ const Context = createContext();
 
 export const StateContext = ({ children }) => {
 
-  const [totalQuantities, setTotalQuantities] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [qty, setQty] = useState(1);
-
-  let foundProduct;
+  const [totalQuantities, setTotalQuantities] = useState(0); // 📌
+  const [totalPrice, setTotalPrice] = useState(0); // 💰
+  const [showCart, setShowCart] = useState(false); // 🛒
+  const [cartItems, setCartItems] = useState([]); // 🛒
+  const [qty, setQty] = useState(1); // 📌
 
 
-  // for add product into cart
-  const onAdd = (product, quantity) => {
 
-    // find that product is already exist in the cart or not?
+  // this function used by 🟩 "ProductInfo" [slug].js <Component/>
+  // 🟡🟡🟡 for product increment button...
+  const incQty = () => setQty(prevQty => prevQty + 1);
+
+
+  // this function used by 🟩 "ProductInfo" [slug].js <Component/>
+  // 🟡🟡🟡 for product decrement button...
+  const decQty = () => setQty(prevQty => {
+    if ((prevQty - 1) < 1) return 1;
+    return prevQty - 1;
+  });
+
+
+  // this function used by 🟩 "ProductInfo" [slug].js <Component/>
+  // 🟡🟡🟡 for add ➕ product into cart [array]... 🛒
+  const addProductIntoCart = (product, quantity) => {
+
+    // 1st) ✅ find that product is already exist in the cart [array] OR not? 🛒
     const checkProductInCart = cartItems.find(p => p._id === product._id);
 
 
-    // if product already exist/present in cart
+    // 2nd) ✅ if product already exist/present in cart 🛒
     if (checkProductInCart) {
-      // show a notification for user...
+      //  2.1) ✅ just display a toast notification for user...
       toast.success(`This product already added into cart.`, {
         duration: 3000,
         style: {
@@ -33,18 +46,22 @@ export const StateContext = ({ children }) => {
         },
       });
     }
-    // if product NOT exist/present in cart
+    // 3rd) ✅ if product is ❗❗❗NOT exist/present into cart... 🛒
     else {
-      // add new 'quantity' property with its value...
+      // 3.1) ✅ add new 'quantity' property, with its existing property...
       product.quantity = quantity;
 
-      // add into state variable
-      setCartItems([...cartItems, { ...product }]);
+      // 🔴🔴 very very important statement OR heart section for cart... 🔴🔴
+      // 3.2) ✅ add or update cart [array] for product, by the help of useState variable...
+      setCartItems([...cartItems, { ...product }]); // 🛒
 
+      // 3.3) ✅ calculate "ALL Total Price" of product's that user added into cart...
       setTotalPrice(prevTotalPrice => prevTotalPrice + product.price * quantity);
+
+      // 3.4) ✅ keep tracking for "ALL Product's" that user added into cart...
       setTotalQuantities(prevTotalQuantities => prevTotalQuantities + quantity);
 
-      // show a notification for user...
+      // 3.5) ✅ display a toast notification for user about product...
       toast.success(`${qty} ${product.name} - added into cart.`, {
         style: {
           background: '#F1F8E9'
@@ -54,16 +71,71 @@ export const StateContext = ({ children }) => {
   }
 
 
-  // for remove product from cart
-  const onRemove = (product) => {
-    foundProduct = cartItems.find(item => item._id === product._id);
+
+  // this function used by 🟩 "Cart" <Component/> 🛒
+  // 🔴🔴🔴 for manipulation product quantity... inside Cart <Component /> 🛒
+  const cartItemsManipulation = (id, value) => {
+
+    // 1st) ✅ find 🔎 this product is exist inside cart [array] OR not? 🛒
+    const foundProduct = cartItems.find(item => item._id === id);
+
+    // 2nd) ✅ if user press "Decrement" btn from Cart <Component /> 🛒
+    if (value === 'dec') {
+      if (foundProduct.quantity > 1) {
+        // 2.1) 🟢 loop inside cart [array] 🛒 for find 🔎 this product...
+        // & ➖ decrease "quantity" property from foundProduct variable...
+        const updatedProduct = cartItems.map(item => item._id === id
+          ? { ...foundProduct, quantity: foundProduct.quantity - 1 }
+          : item
+        );
+        // 2.2) 🟢 update that cart [array] 🛒 for new product value...
+        setCartItems(updatedProduct);
+
+        // 2.3) 🟢 minus ➖ that Product Price also from "totalPrice" useState variable...
+        setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price)
+
+        // 2.4) 🟢 minus ➖ that Product Quantity also from "totalQuantities" useState variable...
+        setTotalQuantities(prevTotalQuantities => prevTotalQuantities - 1)
+      }
+    }
+    // 3rd) ✅ if user press "Increment" btn from Cart <Component /> 🛒
+    else {
+      // 3.1) 🟢 loop inside cart [array] 🛒 for find 🔎 that product...
+      // & ➕ increase "quantity" property from foundProduct variable...
+      const updatedProduct = cartItems.map(item => item._id === id
+        ? { ...foundProduct, quantity: foundProduct.quantity + 1 }
+        : item
+      );
+
+      // 3.2) 🟢 update that cart [array] 🛒 for new product value...      
+      setCartItems(updatedProduct);
+
+      // 3.3) 🟢 plus ➕ that Product Price also into "totalPrice" useState variable...
+      setTotalPrice(prevTotalPrice => prevTotalPrice + foundProduct.price)
+
+      // 3.4) 🟢 plus ➕ that Product Quantity also into "totalQuantities" useState variable...
+      setTotalQuantities(prevTotalQuantities => prevTotalQuantities + 1)
+    }
+  }
+
+
+  // this function used by 🟩 "Cart" <Component/> 🛒
+  // 🔴🔴🔴 for remove ➖ product from cart... 🛒
+  const removeProductFromCart = (product) => {
+
+    // 1st) ✅ remove this product from cart [array] 🛒
     const newCartItems = cartItems.filter(item => item._id !== product._id);
 
-    setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price * foundProduct.quantity);
-    setTotalQuantities(prevTotalQuantities => prevTotalQuantities - foundProduct.quantity);
+    // 2nd) ✅ update cart [array] 🛒 for new product value... 
     setCartItems(newCartItems);
 
-    // show a notification for user...
+    // 3rd) ✅ minus ➖ this product total price also, from "totalPrice" useState variable...
+    setTotalPrice(prevTotalPrice => prevTotalPrice - (product.price * product.quantity));
+
+    // 4th) ✅ minus ➖ this product total quantity also, from "totalQuantities" useState variable...
+    setTotalQuantities(prevTotalQuantities => prevTotalQuantities - product.quantity);
+
+    // 5th) ✅ just inform user this product remove from cart [array] 🛒 by toast notification
     toast.success(`${product.name} - remove from cart.`, {
       position: 'top-right',
       style: {
@@ -71,52 +143,6 @@ export const StateContext = ({ children }) => {
       },
     });
   }
-
-
-  // for inside cart... product quantity manipulation
-  const toggleCartItemQuantity = (id, value) => {
-
-    foundProduct = cartItems.find(item => item._id === id);
-    const index = cartItems.findIndex(product => product._id === id);
-
-    if (value === 'inc') {
-      setCartItems(
-        cartItems.map((item, i) =>
-          i === index
-            ? { ...foundProduct, quantity: foundProduct.quantity + 1 }
-            : item
-        )
-      );
-      setTotalPrice(prevTotalPrice => prevTotalPrice + foundProduct.price)
-      setTotalQuantities(prevTotalQuantities => prevTotalQuantities + 1)
-    } else if (value === 'dec' && foundProduct.quantity > 1) {
-      setCartItems(
-        cartItems.map((item, i) =>
-          i === index
-            ? { ...foundProduct, quantity: foundProduct.quantity - 1 }
-            : item
-        )
-      );
-      setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price)
-      setTotalQuantities(prevTotalQuantities => prevTotalQuantities - 1)
-    }
-  }
-
-
-  // for product increment button...
-  const incQty = () => {
-    setQty(prevQty => prevQty + 1);
-  }
-
-
-  // for product decrement button...
-  const decQty = () => {
-    setQty(prevQty => {
-      if ((prevQty - 1) < 1) return 1;
-      return prevQty - 1;
-    });
-  }
-
 
 
   return (
@@ -130,13 +156,13 @@ export const StateContext = ({ children }) => {
         setQty,
         incQty,
         decQty,
-        onAdd,
-        onRemove,
         setShowCart,
         setCartItems,
         setTotalPrice,
         setTotalQuantities,
-        toggleCartItemQuantity,
+        addProductIntoCart,
+        removeProductFromCart,
+        cartItemsManipulation,
       }}
     >
 

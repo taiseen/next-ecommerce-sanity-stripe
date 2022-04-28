@@ -9,6 +9,7 @@ const Success = () => {
 
     const { setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
 
+    // just remove + reset all values form variables...
     useEffect(() => {
         localStorage.clear();
         setCartItems([]);

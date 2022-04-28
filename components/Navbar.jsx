@@ -19,12 +19,17 @@ const Navbar = () => {
       <button
         type='button'
         className='cart-icon'
+
+        // Just toggling OR (true)on / (false)off Cart UI at users display... 🛒
         onClick={() => setShowCart(prevShowCart => !prevShowCart)}>
         <AiOutlineShopping />
+
+        {/* Just display the Total Number of product from Cart length... 🛒  */}
         <span className='cart-item-qty'>{cartItems.length}</span>
+
       </button>
 
-      {
+      { // toggling for displaying... Cart <Component /> 🛒
         showCart && <Cart />
       }
     </div>

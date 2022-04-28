@@ -11,12 +11,11 @@ import Link from 'next/link';
 const Cart = () => {
 
   const cartRef = useRef();
-  const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove } = useStateContext();
+  const { totalPrice, totalQuantities, cartItems, setShowCart, cartItemsManipulation, removeProductFromCart } = useStateContext();
 
 
   // for stripe payment system...
   const handleCheckout = async () => {
-    console.log('click...');
 
     const stripe = await getStripe();
 
@@ -43,11 +42,11 @@ const Cart = () => {
   }
 
 
-
   return (
     <div
       ref={cartRef}
       className="cart-wrapper"
+      // for 🟡❌🟡 close/hide Cart <Component /> 🛒
       onClick={() => setShowCart(false)}>
 
       <div className="cart-container">
@@ -55,6 +54,7 @@ const Cart = () => {
         <button
           type="button"
           className="cart-heading"
+          // for 🟡❌🟡 close/hide Cart <Component /> 🛒
           onClick={() => setShowCart(false)}>
           <AiOutlineLeft />
           <span className="heading">Your Cart</span>
@@ -63,8 +63,10 @@ const Cart = () => {
           </span>
         </button>
 
+
         {
-          cartItems.length < 1 && (
+          // if ❗❗NO❗❗ product exist inside the Cart <Component /> 🛒
+          !cartItems.length && (
             <div className="empty-cart">
               <AiOutlineShopping size={150} />
               <h3>Your shopping bag is empty</h3>
@@ -72,6 +74,7 @@ const Cart = () => {
               <Link href="/" passHref>
                 <button
                   type="button"
+                  // for 🟡❌🟡 close/hide Cart <Component /> 🛒
                   onClick={() => setShowCart(false)}
                   className="btn"
                 >
@@ -82,12 +85,20 @@ const Cart = () => {
           )
         }
 
+
+
         <div className="product-container">
           {
-            cartItems.length >= 1 && cartItems.map((item) => (
+            // if product ✅ exist ✅ inside the Cart <Component /> 🛒
+            cartItems.length >= 1 &&
+            cartItems.map(item => ( // loop 🔄 each item inside cart[array] 🛒
+
               <div className="product" key={item?._id}>
 
-                <img src={urlFor(item?.image[0])} className="cart-product-image" alt={item?.name} />
+                <img
+                  className="cart-product-image"
+                  src={urlFor(item?.image[0])}
+                  alt={item?.name} />
 
                 <div className="item-desc">
 
@@ -101,22 +112,26 @@ const Cart = () => {
                     <div>
                       <p className="quantity-desc">
 
-                        {/* for decrementing product quantity */}
+                        {/* for ➖ decrementing product quantity */}
                         <span className="minus" onClick={(e) => {
-                          // for preventing parent onClick event...
+                          // for 🟡🔴🟡 preventing parent onClick event...
                           e.stopPropagation();
-                          toggleCartItemQuantity(item?._id, 'dec');
+                          cartItemsManipulation(item?._id, 'dec');
+                          // bind/attach function with each item...
+                          // for listening user event...
                         }}>
                           <AiOutlineMinus />
                         </span>
 
                         <span className="num">{item?.quantity}</span>
 
-                        {/* for incrementing product quantity */}
+                        {/* for ➕ incrementing product quantity */}
                         <span className="plus" onClick={(e) => {
-                          // for preventing parent onClick event...
+                          // for 🟡🔴🟡 preventing parent onClick event...
                           e.stopPropagation();
-                          toggleCartItemQuantity(item?._id, 'inc');
+                          cartItemsManipulation(item?._id, 'inc');
+                          // bind/attach function with each item...
+                          // for listening user event...
                         }}>
                           <AiOutlinePlus />
                         </span>
@@ -124,14 +139,16 @@ const Cart = () => {
                       </p>
                     </div>
 
-                    {/* for remove product from cart */}
+                    {/* for remove product from cart 🛒 */}
                     <button
                       type="button"
                       className="remove-item"
                       onClick={(e) => {
-                        // for preventing parent onClick event...
+                        // for 🟡🔴🟡 preventing parent onClick event...
                         e.stopPropagation();
-                        onRemove(item)
+                        removeProductFromCart(item);
+                        // bind/attach function with each item...
+                        // for listening user event...
                       }}
                     >
                       <TiDeleteOutline />
@@ -143,13 +160,18 @@ const Cart = () => {
           }
         </div>
 
+
+
         {
+          // outside of cart[array] 🛒 loop 🔄
+          // just print total addition price of items that present inside cart[array] 🛒
           cartItems.length >= 1 && (
             <div className="cart-bottom">
 
               <div className="total">
                 <h3>Subtotal:</h3>
-                <h3>${totalPrice}</h3>
+                {/* for adding comma (,) after 3 digit  */}
+                <h3>${totalPrice.toLocaleString()}</h3>
               </div>
 
               <div className="btn-container">
