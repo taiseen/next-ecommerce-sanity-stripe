@@ -17,27 +17,32 @@ const Cart = () => {
   // for stripe payment system...
   const handleCheckout = async () => {
 
+    // 1st) ✅ get the stripe Object from...
+    // this single tone design pattern function...
     const stripe = await getStripe();
 
+    // 2nd) ✅ api request to our own Next-Js BackEnd...
     const response = await fetch('/api/stripe', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify(cartItems),
+      // 3rd) ✅ send total cart[array] 🛒 into stripe BackEnd...
     });
 
+    //if something 🟥 wrong ==> just exit this function...
     if (response.statusCode === 500) return;
 
     const data = await response.json();
 
-    // show a notification for user...
+    // 🟩 show a notification for user...
     toast.loading('Redirecting...', {
       style: {
         background: '#CFD8DC'
       },
     });
 
+    // 4th) ✅ call this stripe instance/Object...
+    // for redirect user at stripe payment page...
     stripe.redirectToCheckout({ sessionId: data.id });
   }
 
@@ -91,20 +96,21 @@ const Cart = () => {
           {
             // if product ✅ exist ✅ inside the Cart <Component /> 🛒
             cartItems.length >= 1 &&
-            cartItems.map(item => ( // loop 🔄 each item inside cart[array] 🛒
+            cartItems.map(product => ( // loop 🔄 each product inside cart[array] 🛒
 
-              <div className="product" key={item?._id}>
+              <div className="product" key={product?._id}>
 
                 <img
                   className="cart-product-image"
-                  src={urlFor(item?.image[0])}
-                  alt={item?.name} />
+                  src={urlFor(product?.image[0])}
+                  alt={product?.name} />
 
                 <div className="item-desc">
 
                   <div className="flex top">
-                    <h5>{item?.name}</h5>
-                    <h4>${item?.price}</h4>
+                    <h5>{product?.name}</h5>
+                    <h4>${product?.price}</h4>
+                    <h4>${product?.price * product?.quantity}</h4>
                   </div>
 
                   <div className="flex bottom">
@@ -116,21 +122,21 @@ const Cart = () => {
                         <span className="minus" onClick={(e) => {
                           // for 🟡🔴🟡 preventing parent onClick event...
                           e.stopPropagation();
-                          cartItemsManipulation(item?._id, 'dec');
-                          // bind/attach function with each item...
+                          cartItemsManipulation(product, 'dec');
+                          // bind/attach function with each product...
                           // for listening user event...
                         }}>
                           <AiOutlineMinus />
                         </span>
 
-                        <span className="num">{item?.quantity}</span>
+                        <span className="num">{product?.quantity}</span>
 
                         {/* for ➕ incrementing product quantity */}
                         <span className="plus" onClick={(e) => {
                           // for 🟡🔴🟡 preventing parent onClick event...
                           e.stopPropagation();
-                          cartItemsManipulation(item?._id, 'inc');
-                          // bind/attach function with each item...
+                          cartItemsManipulation(product, 'inc');
+                          // bind/attach function with each product...
                           // for listening user event...
                         }}>
                           <AiOutlinePlus />
@@ -146,8 +152,8 @@ const Cart = () => {
                       onClick={(e) => {
                         // for 🟡🔴🟡 preventing parent onClick event...
                         e.stopPropagation();
-                        removeProductFromCart(item);
-                        // bind/attach function with each item...
+                        removeProductFromCart(product);
+                        // bind/attach function with each product...
                         // for listening user event...
                       }}
                     >

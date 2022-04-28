@@ -1,10 +1,14 @@
 import Stripe from 'stripe';
 
+// create a "new object" of Stripe with the help of Key...
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
 
-  console.log(req.body);
+const stripeHandler = async (req, res) => {
+
+  // you can't see this console.log at FrontEnd or in user Browser...
+  // you can see this console.log at BackEnd or in IDE terminal...
+  // console.log(req.body);
 
   if (req.method === 'POST') {
 
@@ -18,6 +22,7 @@ export default async function handler(req, res) {
         shipping_options: [
           { shipping_rate: 'shr_1KsZ1cHje2ICnTUd4okW2LN7' }
         ],
+        // loop 🔄 inside cart[array] 🛒 that come from FrontEnd...
         line_items: req.body.map(item => {
           const img = item.image[0].asset._ref;
           const newImage = img
@@ -25,7 +30,6 @@ export default async function handler(req, res) {
             .replace('-webp', '.webp');
 
           return {
-
             price_data: {
               currency: 'usd',
               product_data: {
@@ -39,10 +43,10 @@ export default async function handler(req, res) {
               minimum: 1,
             },
             quantity: item.quantity
-
           }
         }),
-        // Redirect user into (success.js) page at frontEnd
+        // Redirect user into (success.js) page at FrontEnd 
+        // after completing payment process...
         success_url: `${req.headers.origin}/success`,
         cancel_url: `${req.headers.origin}/canceled`,
       }
@@ -62,3 +66,5 @@ export default async function handler(req, res) {
     res.status(405).end('Method Not Allowed');
   }
 }
+
+export default stripeHandler;

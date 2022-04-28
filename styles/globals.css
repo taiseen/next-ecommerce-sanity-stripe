@@ -408,6 +408,8 @@ span.text-red {
 .item-desc .flex {
   display        : flex;
   justify-content: space-between;
+  align-items    : center;
+  line-height    : 1.5;
   width          : 350px;
   color          : #324d67;
 
@@ -418,7 +420,7 @@ span.text-red {
 }
 
 .flex h5 {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .flex h4 {
