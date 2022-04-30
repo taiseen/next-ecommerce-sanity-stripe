@@ -1,29 +1,28 @@
 23 Apr 2022
 
-# Next E-commerce app | [Live Link](https://next-e-com.vercel.app)
+## E-commerce App 🎧 🔊 | [Live Link](https://next-e-com.vercel.app)
 
-## Technology
+# Next-Js + Sanity + CSS
 
-* Next-Js 
-* Sanity 
-* Stripe
-
-## Learning | Implementing Context...
-
-01. Dynamic Routing
-02. File Base Routing
-03. Folder Structure
-04. Global Vanilla CSS
-05. get`Static`Props()
-06. get`Static`Paths()
-07. get`ServerSide`Props()
-08. Connect Sanity with Next-Js
-09. Data fetching from BackEnd
-10. Stripe for Payment Gateway
-11. Context API for central data sharing...
-12. Project data flow functional Architecture...
-13. `react-hot-toast` for displaying notification
-14. `canvas-confetti` firework animation for success sms
+## Learning Context:
+|No| Context learn by doing this project...                             | 
+|--|--------------------------------------------------------------------|
+| 1| Dynamic Routing                                                    | 
+| 2| File Base Routing                                                  | 
+| 3| Folder Structure                                                   | 
+| 4| Layout Architecture                                                | 
+| 5| Global Vanilla CSS                                                 | 
+| 6| `Stripe` for Payment Gateway                                       | 
+| 7| Data fetching from `BackEnd`                                       | 
+| 8| Connect `Sanity` BackEnd with `Next-Js`                            | 
+| 9| `Context API` for globally data sharing...                         | 
+|10| Project data flow functional Architecture...                       | 
+|11| `react-hot-toast` for displaying notification                      | 
+|12| `canvas-confetti` firework animation for success sms               | 
+|13| Image change at hover state by the help of `onMouseEnter` attribute| 
+|14| get`Static`Paths() ==> `SSG` ( statically `pre-render all the paths` )     | 
+|15| get`Static`Props() ==> `SSG` ( `pre-render` fetching data at `build time` )| 
+|16| get`ServerSide`Props() ==> `SSR` ( fetching data at `each user request` )  |
 
 
 <br/>
@@ -35,21 +34,23 @@ run this short command for install packages... <br/>
 that listed inside dependencies { object } based on `package.json` file.
 
 
-
 ## Package Installed
-01. yarn add @babel/core
-02. yarn add @sanity/cli
-03. yarn add @sanity/client
-04. yarn add @sanity/image-url
-05. yarn add @stripe/stripe-js 
-06. yarn add canvas-confetti
-07. yarn add next-sanity-image
-08. yarn add react-hot-toast
-09. yarn add react-icons
-10. yarn add stripe
+1. yarn add @babel/core
+2. yarn add @sanity/cli
+3. yarn add @sanity/client
+4. yarn add @sanity/image-url
+5. yarn add @stripe/stripe-js 
+6. yarn add stripe
+7. yarn add react-icons
+8. yarn add react-hot-toast
+9. yarn add canvas-confetti
+10. yarn add next-sanity-image
 
 [Sanity JSM](https://www.sanity.io/javascriptmastery2022)
 
 [Success Animation](https://www.kirilv.com/canvas-confetti)
+
+# Project Demo 
+<img src='https://i.ibb.co/THnD3Dx/next-js.png' />
 
 Learning by inspired from[.](https://youtu.be/4mOkFXyxfsU)
