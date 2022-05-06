@@ -33,6 +33,7 @@ const ProductInfo = ({ singleProduct, allProducts }) => {
         <div>
             <Head>
                 <title>{name}</title>
+                <link rel="icon" href="/headPhone.ico" />
             </Head>
 
             <div className='product-detail-container'>

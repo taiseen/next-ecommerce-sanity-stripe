@@ -32,12 +32,22 @@ export const StateContext = ({ children }) => {
 
 
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
-    localStorage.setItem('totalQuantities', JSON.stringify(totalQuantities));
+    window.localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    window.localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+    window.localStorage.setItem('totalQuantities', JSON.stringify(totalQuantities));
   }, [cartItems, totalPrice, totalQuantities]);
+  
 
+  // useEffect(() => {
+  //   const cart = JSON.parse(window.localStorage.getItem('cartItems'));
+  //   if (cart) {
+  //     setCartItems(cart)
+  //     setTotalPrice(JSON.parse(window.localStorage.getItem('totalPrice')))
+  //     setTotalQuantities(JSON.parse(window.localStorage.getItem('totalQuantities')))
+  //   }
+  // }, [])
 
+  
   // this function used by 🟩 "ProductInfo" [slug].js <Component/>
   // 🟡🟡🟡 for product increment button...
   const incQty = () => setQty(prevQty => prevQty + 1);

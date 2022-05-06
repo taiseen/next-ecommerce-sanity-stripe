@@ -1,11 +1,16 @@
 import { FooterBanner, HeroBanner, Product } from '../components'
 import { client } from '../lib/client';
+import Head from 'next/head';
 
 
 const Home = ({ products, banner }) => {
 
   return (
     <>
+      <Head>
+        <link rel="icon" href="/headPhone.ico" />
+      </Head>
+
       <HeroBanner heroBanner={banner.length && banner[0]} />
 
       <div className="products-heading">
